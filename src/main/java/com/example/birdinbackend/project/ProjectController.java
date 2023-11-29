@@ -23,7 +23,6 @@ public class ProjectController {
     }
     @GetMapping("/project/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Long id, Principal principal) {
-        System.out.println(principal.getName());
         Optional<Project> response = repository.findByOwnerAndId(principal.getName(), id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

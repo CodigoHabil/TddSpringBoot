@@ -1,5 +1,6 @@
 package com.example.birdinbackend.user;
 
+import com.example.birdinbackend.project.Project;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -25,7 +27,7 @@ public class User implements UserDetails {
     private static final long serialVersionUID = 4074374728582967483L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
 
@@ -35,9 +37,18 @@ public class User implements UserDetails {
     private String displayName;
 
     private String password;
+    private String email;
 
     private String image;
 
+    @ManyToMany(mappedBy = "users")
+    private List<Project> projects;
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

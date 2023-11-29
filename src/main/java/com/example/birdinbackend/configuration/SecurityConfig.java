@@ -5,7 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,29 +25,23 @@ class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCrea ntionPolicy.STATELESS))
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers( new AntPathRequestMatcher("/project/**"))
-                        .permitAll()
+                        .authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/task/**"))
+                        .authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/users/**"))
                         .permitAll()
-                        .anyRequest().authenticated())
-                    .httpBasic(Customizer.withDefaults())
+                        .requestMatchers(new AntPathRequestMatcher("/h2-console/**"))
+                        .permitAll()
+                        .anyRequest().permitAll())
+                .httpBasic(Customizer.withDefaults())
                 .build();
-
-        /*
-
-             http
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers("/project/**")
-                        .authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults());
-        return http.build();
-
-        * */
     }
 
     @Bean
@@ -62,4 +59,7 @@ class SecurityConfig {
                 .build();
         return new InMemoryUserDetailsManager(sarah);
     }
+
+
+
 }

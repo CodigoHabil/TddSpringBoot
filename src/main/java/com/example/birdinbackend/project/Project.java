@@ -1,6 +1,7 @@
 package com.example.birdinbackend.project;
 
 import com.example.birdinbackend.task.Task;
+import com.example.birdinbackend.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -25,6 +26,13 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     List<Task> task = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name="user_project", joinColumns = @JoinColumn(name = "project_id", referencedColumnName="id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName="id")
+    )
+    List<User> users = new ArrayList<>();
 
     public Project(long id, String title, String description) {
         this.id = id;
