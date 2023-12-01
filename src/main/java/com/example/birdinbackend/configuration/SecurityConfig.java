@@ -28,12 +28,12 @@ class SecurityConfig {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCrea ntionPolicy.STATELESS))
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( new AntPathRequestMatcher("/project/**"))
+                        .requestMatchers( new AntPathRequestMatcher("/projects/**"))
                         .authenticated()
-                        .requestMatchers(new AntPathRequestMatcher("/task/**"))
+                        .requestMatchers(new AntPathRequestMatcher("/tasks/**"))
                         .authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/users/**"))
                         .permitAll()

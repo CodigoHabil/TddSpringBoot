@@ -12,10 +12,6 @@ import java.util.Objects;
 
 
 @Entity
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
 public class Project {
     @Id
     @GeneratedValue
@@ -34,6 +30,14 @@ public class Project {
     )
     List<User> users = new ArrayList<>();
 
+    public Project() {
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public Project(long id, String title, String description) {
         this.id = id;
         this.title = title;
@@ -50,6 +54,50 @@ public class Project {
         this.title = title;
         this.description = description;
         this.owner = owner;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public List<Task> getTask() {
+        return task;
+    }
+
+    public void setTask(List<Task> task) {
+        this.task = task;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     @Override

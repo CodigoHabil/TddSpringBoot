@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 
 public class ProjectJsonTest {
-
     @Autowired
     private JacksonTester<Project> json;
     @Test

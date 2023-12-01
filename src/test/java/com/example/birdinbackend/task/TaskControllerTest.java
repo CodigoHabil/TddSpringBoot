@@ -28,12 +28,12 @@ class TaskControllerTest {
         Project project = new Project(1L,"BirdIn Software", "This is a project", "sarah1");
         restTemplate
                 .withBasicAuth("sarah1", "abc123")
-                .postForEntity("/project", project, Void.class);
+                .postForEntity("/projects", project, Void.class);
 
         Task task = new Task("BirdIn Software", "This is a task", "sarah1", project);
         ResponseEntity<Void> createResponse = restTemplate
                 .withBasicAuth("sarah1", "abc123")
-                .postForEntity("/task", task, Void.class);
+                .postForEntity("/tasks", task, Void.class);
 
         URI locationOfTask = createResponse.getHeaders().getLocation();
         ResponseEntity<String> getResponse = restTemplate
@@ -49,7 +49,7 @@ class TaskControllerTest {
     void zshouldReturnATask() {
         ResponseEntity<String> response = restTemplate
                 .withBasicAuth("sarah1", "abc123")
-                .getForEntity("/task/1", String.class);
+                .getForEntity("/tasks/1", String.class);
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

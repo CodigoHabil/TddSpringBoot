@@ -23,13 +23,14 @@ class BirdinBackendApplicationTests {
     TestRestTemplate restTemplate;
 
     @Test
-    void shouldCreateANewCashCard() {
+    void shouldCreateANewProject() {
         Project project = new Project(1L,"BirdIn Software", "This is a project", "sarah1");
         ResponseEntity<Void> createResponse = restTemplate
                 .withBasicAuth("sarah1", "abc123")
-                .postForEntity("/project", project, Void.class);
+                .postForEntity("/projects", project, Void.class);
 
         URI locationOfProject = createResponse.getHeaders().getLocation();
+        System.out.println(createResponse.getBody());
         ResponseEntity<String> getResponse = restTemplate
                 .withBasicAuth("sarah1", "abc123")
                 .getForEntity(locationOfProject, String.class);
@@ -42,7 +43,7 @@ class BirdinBackendApplicationTests {
     void shouldReturnAProjectWhenDataIsSaved() {
         ResponseEntity<String> response = restTemplate
                 .withBasicAuth("sarah1", "abc123")
-                .getForEntity("/project/1", String.class);
+                .getForEntity("/projects/1", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -58,12 +59,12 @@ class BirdinBackendApplicationTests {
     void shouldNotReturnACashCardWhenUsingBadCredentials() {
         ResponseEntity<String> response = restTemplate
                 .withBasicAuth("BAD-USER", "abc123")
-                .getForEntity("/project/99", String.class);
+                .getForEntity("/projects/99", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
 
         response = restTemplate
                 .withBasicAuth("sarah1", "BAD-PASSWORD")
-                .getForEntity("/project/99", String.class);
+                .getForEntity("/projects/99", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
