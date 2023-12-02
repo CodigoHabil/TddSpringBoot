@@ -25,6 +25,9 @@ public class Member {
     private Project project;
     private Boolean enabled = true;
 
+    public Member() {
+    }
+
     public Member( User user, String username, Project project) {
         this.user = user;
         this.username = username;

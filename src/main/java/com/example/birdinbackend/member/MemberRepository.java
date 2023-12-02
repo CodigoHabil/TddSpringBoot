@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface MemberRepository extends CrudRepository<Member, Long> {
     public Optional<Member> findByProjectAndUsername(Project project, String username);
+
+    Optional<Member> findByUsernameAndId(String name, Long id);
 }
