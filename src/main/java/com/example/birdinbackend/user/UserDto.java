@@ -1,8 +1,5 @@
 package com.example.birdinbackend.user;
 
-import lombok.*;
-
-
 public class UserDto {
 
     private String username;

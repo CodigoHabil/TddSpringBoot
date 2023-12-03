@@ -69,13 +69,19 @@ public class TaskController {
     }
 
     @GetMapping("projects/{idProject}/tasks/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long idProject, @PathVariable Long id,  UriComponentsBuilder ucb, Principal principal) {
+    public ResponseEntity<TaskDto> updateTask(@PathVariable Long idProject, @PathVariable Long id,  UriComponentsBuilder ucb, Principal principal) {
         if(memberRepository.findByUsernameAndId(principal.getName(), idProject).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
         Optional<Task> task = repository.findById(id);
 
-        return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if(task.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        TaskDto taskDto = TaskMapper.INSTANCE.taskDto(task.get());
+
+        return ResponseEntity.ok(taskDto);
+        //return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
