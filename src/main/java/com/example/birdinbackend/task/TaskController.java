@@ -21,10 +21,13 @@ public class TaskController {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
 
-    public TaskController(TaskRepository repository, ProjectRepository projectRepository, MemberRepository memberRepository) {
+    private final TaskService taskService;
+
+    public TaskController(TaskRepository repository, ProjectRepository projectRepository, MemberRepository memberRepository, TaskService taskService) {
         this.repository = repository;
         this.projectRepository = projectRepository;
         this.memberRepository = memberRepository;
+        this.taskService = taskService;
     }
 
     @PostMapping("/tasks")
@@ -46,6 +49,19 @@ public class TaskController {
 
     @PostMapping("projects/{id}/tasks")
     public ResponseEntity<Void> createTaskByPost(@RequestBody Task task, @PathVariable Long id,  UriComponentsBuilder ucb, Principal principal) {
+
+
+        Task newTask = taskService.createTask(task, id, principal);
+        if(newTask == null) {
+            return ResponseEntity.notFound().build();
+        }
+        URI locationOfNewCashCard = ucb
+                .path("projects/{id}/tasks/{id_project}/")
+                .buildAndExpand(1,1)
+                .toUri();
+        return ResponseEntity.created(locationOfNewCashCard).build();
+
+        /*
         if(memberRepository.findByUsernameAndId(principal.getName(), id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -66,22 +82,20 @@ public class TaskController {
                 .buildAndExpand(1,1)
                 .toUri();
         return ResponseEntity.created(locationOfNewCashCard).build();
+        */
+
     }
 
     @GetMapping("projects/{idProject}/tasks/{id}")
     public ResponseEntity<TaskDto> updateTask(@PathVariable Long idProject, @PathVariable Long id,  UriComponentsBuilder ucb, Principal principal) {
-        if(memberRepository.findByUsernameAndId(principal.getName(), idProject).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        Optional<Task> task = repository.findById(id);
+        Task task = taskService.getTask(idProject, id, principal.getName(), principal);
 
-        if(task.isEmpty()) {
+        if(task == null) {
             return ResponseEntity.notFound().build();
         }
 
-        TaskDto taskDto = TaskMapper.INSTANCE.taskDto(task.get());
+        TaskDto taskDto = TaskMapper.INSTANCE.taskDto(task);
 
         return ResponseEntity.ok(taskDto);
-        //return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

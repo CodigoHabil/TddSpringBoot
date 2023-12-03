@@ -4,8 +4,6 @@ import com.example.birdinbackend.project.Project;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 
-import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
 class TaskControllerTest {
@@ -99,7 +95,8 @@ class TaskControllerTest {
                 .getForEntity("/projects/1/tasks/1", String.class);
 
         System.out.println(responseGetTask.getBody());
-
+        Number id = JsonPath.parse(responseGetTask.getBody()).read("$.id");
+        Assertions.assertThat(id).isNotNull();
         Assertions.assertThat(responseGetTask.getStatusCode()).isEqualTo(HttpStatus.OK);
 
 
