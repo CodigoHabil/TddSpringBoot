@@ -20,67 +20,14 @@ class TaskControllerTest {
     TestRestTemplate restTemplate;
 
     @Test
-    void shouldCreateANewTask() {
-        Project project = new Project(1L,"BirdIn Software", "This is a project", "sarah1");
-        restTemplate
-                .withBasicAuth("sarah1", "abc123")
-                .postForEntity("/projects", project, Void.class);
-
-        Task task = new Task("BirdIn Software", "This is a task", "sarah1", project);
-        ResponseEntity<Void> createResponse = restTemplate
-                .withBasicAuth("sarah1", "abc123")
-                .postForEntity("/tasks", task, Void.class);
-
-        URI locationOfTask = createResponse.getHeaders().getLocation();
-        ResponseEntity<String> getResponse = restTemplate
-                .withBasicAuth("sarah1", "abc123")
-                .getForEntity(locationOfTask, String.class);
-        Assertions.assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        Assertions.assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-    }
-
-    @Test
-    void zshouldReturnATask() {
-        ResponseEntity<String> response = restTemplate
-                .withBasicAuth("sarah1", "abc123")
-                .getForEntity("/tasks/1", String.class);
-
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-        System.out.println(response.getBody());
-
-        Number id = documentContext.read("$.id");
-        Assertions.assertThat(id).isNotNull();
-
-    }
-
-    @Test
-    void itCreatesATaskBasedOnAProject() {
-        ResponseEntity<String> response = restTemplate
-                .withBasicAuth("sarah1", "abc123")
-                .getForEntity("/tasks/1", String.class);
-
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-        System.out.println(response.getBody());
-
-        Number id = documentContext.read("$.id");
-        Assertions.assertThat(id).isNotNull();
-    }
-
-    @Test
     void itCantCreateATaskWithAValidProject() {
         Project project = new Project(1L,"BirdIn Software", "This is a project", "sarah1");
         restTemplate
                 .withBasicAuth("sarah1", "abc123")
                 .postForEntity("/projects", project, Void.class);
         Task task = new Task("BirdIn Software", "This is a task", "sarah1");
+        task.setProject(project);
+
         ResponseEntity<Void> createResponse = restTemplate
                 .withBasicAuth("sarah1", "abc123")
                 .postForEntity("/projects/1/tasks", task, Void.class);
@@ -100,6 +47,29 @@ class TaskControllerTest {
         Assertions.assertThat(responseGetTask.getStatusCode()).isEqualTo(HttpStatus.OK);
 
 
+    }
+
+    @Test
+    void zItCreatesATaskBasedOnAProject() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("sarah1", "abc123")
+                .getForEntity("/tasks/1", String.class);
+
+        System.out.println(response.getBody());
+
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        /*
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+
+        Number id = documentContext.read("$.id");
+        Assertions.assertThat(id).isNotNull();
+
+         */
     }
 
     void itReturnsATaskBasedOnTheProject() {

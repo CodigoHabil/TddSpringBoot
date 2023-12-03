@@ -4,6 +4,7 @@ import com.example.birdinbackend.project.Project;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ public class Task {
     private String title;
     private String description;
     private String status;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "project_id")
     private Project project;
 
@@ -80,6 +81,17 @@ public class Task {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Task task = (Task) o;
         return getId() != null && Objects.equals(getId(), task.getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                ", project=" + project +
+                '}';
     }
 
     @Override

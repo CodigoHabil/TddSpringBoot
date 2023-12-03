@@ -60,6 +60,10 @@ public class Project {
         this.id = id;
     }
 
+    public void getId(Long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -106,6 +110,18 @@ public class Project {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Project project = (Project) o;
         return getId() != null && Objects.equals(getId(), project.getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", owner='" + owner + '\'' +
+                ", task=" + task +
+                ", users=" + users +
+                '}';
     }
 
     @Override

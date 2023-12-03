@@ -9,10 +9,6 @@ import org.hibernate.Hibernate;
 import java.util.Objects;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
@@ -41,6 +37,53 @@ public class Member {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", user=" + user +
+                ", username='" + username + '\'' +
+                ", project=" + project +
+                ", enabled=" + enabled +
+                '}';
     }
 
     @Override

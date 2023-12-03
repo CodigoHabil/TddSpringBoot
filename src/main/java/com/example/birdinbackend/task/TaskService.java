@@ -1,5 +1,6 @@
 package com.example.birdinbackend.task;
 
+import com.example.birdinbackend.member.Member;
 import com.example.birdinbackend.member.MemberRepository;
 import com.example.birdinbackend.project.Project;
 import com.example.birdinbackend.project.ProjectRepository;
@@ -21,6 +22,17 @@ public class TaskService {
         this.memberRepository = memberRepository;
     }
 
+    public Task getTask(Long id, Principal principal) {
+        Optional<Task> task = repository.findById(id);
+
+        if(task.isEmpty() || !isMemberOfProject(principal.getName(), task.get().getProject().getId())) {
+            return task.orElse(null);
+        }
+
+        return task.get();
+
+    }
+
     public Task getTask(Long idProject, Long id, String username, Principal principal) {
         if(!isMemberOfProject(username, idProject)) {
             return null;
@@ -40,7 +52,6 @@ public class TaskService {
         if(project.isEmpty()) {
             return null;
         }
-
         return repository.save(task);
     }
 
