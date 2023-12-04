@@ -2,10 +2,7 @@ package com.example.birdinbackend.task;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -60,5 +57,15 @@ public class TaskController {
         TaskDto taskDto = TaskMapper.INSTANCE.taskDto(task);
 
         return ResponseEntity.ok(taskDto);
+    }
+
+    @PutMapping("projects/{idProject}/tasks/{id}")
+    public ResponseEntity<Void> updateTask(@PathVariable Long idProject, @PathVariable Long id, @RequestBody Task task,  UriComponentsBuilder ucb, Principal principal) {
+        Task newTask = taskService.updateTask(task, idProject, id, principal);
+        if(newTask == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 }

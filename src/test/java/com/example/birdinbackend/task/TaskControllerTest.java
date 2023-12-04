@@ -1,13 +1,14 @@
 package com.example.birdinbackend.task;
 
 import com.example.birdinbackend.project.Project;
-import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -50,26 +51,48 @@ class TaskControllerTest {
     }
 
     @Test
-    void zItCreatesATaskBasedOnAProject() {
-        ResponseEntity<String> response = restTemplate
+    void itUpdatesTasks() {
+        Project project = new Project(1L,"BirdIn Software", "This is a project", "sarah1");
+        restTemplate
                 .withBasicAuth("sarah1", "abc123")
-                .getForEntity("/tasks/1", String.class);
+                .postForEntity("/projects", project, Void.class);
+        Task task = new Task("BirdIn Software", "This is a task", "sarah1");
+        task.setProject(project);
 
-        System.out.println(response.getBody());
+        ResponseEntity<Void> createResponse = restTemplate
+                .withBasicAuth("sarah1", "abc123")
+                .postForEntity("/projects/1/tasks", task, Void.class);
+        URI locationOfTask = createResponse.getHeaders().getLocation();
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        System.out.println(createResponse.getStatusCode());
 
-        /*
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-        System.out.println(response.getBody());
+        ResponseEntity<String> responseGetTask = restTemplate
+                .withBasicAuth("sarah1", "abc123")
+                .getForEntity("/projects/1/tasks/1", String.class);
 
-        Number id = documentContext.read("$.id");
+        System.out.println(responseGetTask.getBody());
+        Number id = JsonPath.parse(responseGetTask.getBody()).read("$.id");
         Assertions.assertThat(id).isNotNull();
+        Assertions.assertThat(responseGetTask.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-         */
+        Task taskUpdated = new Task("Its not birdin", "This is a task", "sarah1");
+        taskUpdated.setProject(project);
+        taskUpdated.setId(1L);
+
+        HttpEntity<Task> request = new HttpEntity<>(taskUpdated);
+
+        ResponseEntity<Void> updateResponse = restTemplate
+                .withBasicAuth("sarah1", "abc123")
+                        .exchange("/projects/1/tasks/1", HttpMethod.PUT, request, Void.class);
+        Assertions.assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        ResponseEntity<String> responseUpdatedTask = restTemplate
+                .withBasicAuth("sarah1", "abc123")
+                .getForEntity("/projects/1/tasks/1", String.class);
+        System.out.println(responseUpdatedTask.getBody());
+        Assertions.assertThat(responseUpdatedTask.getBody()).contains("Its not birdin");
     }
 
     void itReturnsATaskBasedOnTheProject() {

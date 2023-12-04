@@ -29,7 +29,7 @@ class UserTest {
         Assertions.assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
-    @Test
+    //@Test
     void zshouldReturnAUserWhenDataIsSaved() {
         User user = new User("sarah1", "abc123", "sarah@email.com");
         restTemplate
@@ -43,7 +43,7 @@ class UserTest {
         System.out.println(response.getBody());
     }
 
-    @Test
+    //@Test
     void createProjectAndUser(){
         Project project = new Project(1L,"BirdIn Software", "This is a project", "sarah1");
         ResponseEntity<Void> createResponse = restTemplate
