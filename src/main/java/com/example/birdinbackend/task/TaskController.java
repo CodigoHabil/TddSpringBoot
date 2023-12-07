@@ -7,16 +7,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.Optional;
 
 @Controller
 public class TaskController {
-    private final TaskRepository repository;
-
     private final TaskService taskService;
 
-    public TaskController(TaskRepository repository, TaskService taskService) {
-        this.repository = repository;
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
@@ -27,7 +23,6 @@ public class TaskController {
         if(task == null) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(task);
     }
 
