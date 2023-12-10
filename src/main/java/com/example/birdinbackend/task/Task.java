@@ -2,9 +2,7 @@ package com.example.birdinbackend.task;
 
 import com.example.birdinbackend.project.Project;
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.Hibernate;
-import org.springframework.context.annotation.Lazy;
 
 import java.util.Objects;
 

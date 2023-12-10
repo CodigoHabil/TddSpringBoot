@@ -3,7 +3,6 @@ package com.example.birdinbackend.member;
 import com.example.birdinbackend.project.Project;
 import com.example.birdinbackend.user.User;
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;
